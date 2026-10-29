@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Sejarah Perjuangan Mempertahankan Kemerdekaan Indonesia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-3 sm:p-6">
+
+  <!-- Container Utama -->
+  <main class="w-full max-w-2xl bg-slate-800 border border-slate-700/80 shadow-2xl rounded-2xl overflow-hidden transition-all duration-300">
+    
+    <!-- ================= HALAMAN 1: START SCREEN ================= -->
+    <section id="screen-start" class="p-6 sm:p-10 flex flex-col justify-between">
+      <div class="text-center mb-8">
+        <span class="inline-block py-1 px-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 font-semibold text-xs tracking-wider uppercase rounded-full mb-3">
+          Kuis Interaktif Sejarah
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+          Perjuangan Mempertahankan Kemerdekaan Indonesia
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base mt-2">
+          Uji pemahaman peristiwa diplomasi, pertempuran kemerdekaan, dan tokoh-tokoh penting bangsa.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Input Nama -->
+        <div>
+          <label for="player-name" class="block text-sm font-semibold text-slate-300 mb-2">
+            Nama Lengkap / Nama Panggilan
+          </label>
+          <input 
+            type="text" 
+            id="player-name" 
+            placeholder="Ketik nama Anda di sini..." 
+            class="w-full px-4 py-3 bg-slate-900/90 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-500 transition-all text-base"
+            autocomplete="off"
+          />
+          <p id="name-error" class="text-rose-400 text-xs mt-1.5 hidden font-medium">Silakan masukkan nama Anda sebelum memulai.</p>
+        </div>
+
+        <!-- Pilihan Durasi -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-300 mb-2">
+            Pilih Durasi Waktu per Soal
+          </label>
+          <div class="grid grid-cols-2 gap-4">
+            <label class="relative flex flex-col items-center justify-center p-4 bg-slate-900/60 border border-slate-700 rounded-xl cursor-pointer hover:border-rose-500/70 transition-all has-[:checked]:border-rose-500 has-[:checked]:bg-rose-950/20">
+              <input type="radio" name="time-option" value="15" class="sr-only" checked>
+              <span class="text-xl font-bold text-white">15 Detik</span>
+              <span class="text-xs text-slate-400 mt-1">Cepat & Menantang</span>
+            </label>
+            <label class="relative flex flex-col items-center justify-center p-4 bg-slate-900/60 border border-slate-700 rounded-xl cursor-pointer hover:border-rose-500/70 transition-all has-[:checked]:border-rose-500 has-[:checked]:bg-rose-950/20">
+              <input type="radio" name="time-option" value="30" class="sr-only">
+              <span class="text-xl font-bold text-white">30 Detik</span>
+              <span class="text-xs text-slate-400 mt-1">Santai & Cukup Waktu</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="bg-slate-900/40 border border-slate-700/60 rounded-xl p-4 text-xs sm:text-sm text-slate-400 space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Total Soal: <strong class="text-slate-200">24 Soal</strong> (Diacak otomatis)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span>Pilihan jawaban selalu teracak setiap sesi kuis</span>
+          </div>
+        </div>
+
+        <!-- Tombol Mulai -->
+        <button 
+          id="btn-start" 
+          onclick="startQuiz()" 
+          class="w-full py-3.5 px-6 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-[0.99] text-white font-bold text-base rounded-xl shadow-lg shadow-rose-950/50 transition-all duration-150">
+          Mulai Kuis Sekarang
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 2: QUIZ SCREEN ================= -->
+    <section id="screen-quiz" class="p-6 sm:p-8 hidden flex-col">
+      <!-- Header Kuis: Info & Timer -->
+      <div class="mb-5">
+        <div class="flex justify-between items-center text-sm font-semibold text-slate-400 mb-2">
+          <span id="quiz-question-counter" class="text-slate-300">Soal 1 dari 24</span>
+          <span class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700">
+            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="quiz-timer-text" class="font-mono text-white text-base">15s</span>
+          </span>
+        </div>
+
+        <!-- Progress Bar Timer -->
+        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-700/60">
+          <div id="quiz-timer-bar" class="h-full bg-rose-500 transition-[width] duration-100 ease-linear" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Teks Pertanyaan -->
+      <div class="bg-slate-900/50 border border-slate-700/70 p-5 sm:p-6 rounded-2xl mb-6 min-h-[110px] flex items-center">
+        <h2 id="quiz-question-text" class="text-base sm:text-lg font-bold text-white leading-relaxed">
+          Pertanyaan kuis akan dimuat di sini...
+        </h2>
+      </div>
+
+      <!-- Pilihan Jawaban -->
+      <div id="quiz-options-container" class="space-y-3 mb-6">
+        <!-- Pilihan jawaban di-generate oleh JS -->
+      </div>
+
+      <!-- Notifikasi Jawaban / Waktu Habis & Tombol Lanjut -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-700/60 min-h-[52px]">
+        <div id="feedback-message" class="text-sm font-semibold"></div>
+        <button 
+          id="btn-next" 
+          onclick="nextQuestion()" 
+          class="hidden w-full sm:w-auto px-6 py-2.5 bg-slate-100 hover:bg-white text-slate-900 font-bold text-sm rounded-xl transition-all shadow">
+          Lanjut ke Soal Berikutnya →
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= HALAMAN 3: REVIEW & RESULT SCREEN ================= -->
+    <section id="screen-result" class="p-6 sm:p-8 hidden">
+      <!-- Hasil Header -->
+      <div class="text-center pb-6 border-b border-slate-700/70">
+        <span class="inline-block py-1 px-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold text-xs tracking-wider uppercase rounded-full mb-2">
+          Kuis Selesai
+        </span>
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-1">
+          Kuis Sejarah Perjuangan Mempertahankan Kemerdekaan Indonesia
+        </h2>
+        <p class="text-sm text-slate-400">
+          Peserta: <strong id="result-player-name" class="text-rose-400 font-semibold text-base">Nama</strong>
+        </p>
+
+        <!-- Lingkaran Nilai -->
+        <div class="my-6 inline-flex flex-col items-center justify-center w-32 h-32 rounded-full border-4 border-rose-500 bg-slate-900 shadow-xl">
+          <span class="text-xs uppercase font-bold text-slate-400 tracking-wider">Nilai Akhir</span>
+          <span id="result-score" class="text-4xl font-extrabold text-white">0</span>
+          <span class="text-[10px] text-slate-400">Skala 100</span>
+        </div>
+
+        <!-- Statistik -->
+        <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+          <div class="p-3 bg-slate-900/60 rounded-xl border border-emerald-500/30">
+            <div id="result-correct" class="text-xl font-bold text-emerald-400">0</div>
+            <div class="text-xs text-slate-400 mt-0.5">Benar</div>
+          </div>
+          <div class="p-3 bg-slate-900/60 rounded-xl border border-rose-500/30">
+            <div id="result-wrong" class="text-xl font-bold text-rose-400">0</div>
+            <div class="text-xs text-slate-400 mt-0.5">Salah</div>
+          </div>
+          <div class="p-3 bg-slate-900/60 rounded-xl border border-amber-500/30">
+            <div id="result-timeout" class="text-xl font-bold text-amber-400">0</div>
+            <div class="text-xs text-slate-400 mt-0.5">Waktu Habis</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Review Soal -->
+      <div class="mt-6">
+        <h3 class="text-base font-bold text-white mb-3 flex items-center justify-between">
+          <span>Review Detail Jawaban</span>
+          <span class="text-xs font-normal text-slate-400">(24 Soal)</span>
+        </h3>
+        
+        <div id="review-list" class="space-y-4 max-h-[360px] overflow-y-auto pr-1 custom-scrollbar">
+          <!-- Item review di-generate secara dinamis -->
+        </div>
+      </div>
+
+      <!-- Tombol Restart -->
+      <div class="mt-8 pt-4 border-t border-slate-700/70">
+        <button 
+          onclick="resetQuiz()" 
+          class="w-full py-3.5 px-6 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-[0.99] text-white font-bold text-base rounded-xl shadow-lg transition-all">
+          Ulangi / Mulai Kuis Baru
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Data Master Soal berdasarkan dokumen
+    const masterQuestions = [
+      {
+        question: "Pasukan Sekutu yang tiba di Medan tanggal 9 Oktober 1945 dipimpin oleh...",
+        options: ["Sir Philip Christison", "Brigjend T.E.D Kelly", "Vanheutz", "Kapten Westerling"],
+        answer: "Brigjend T.E.D Kelly"
+      },
+      {
+        question: "Pembunuhan massal 40.000 rakyat Sulawesi dilakukan oleh...",
+        options: ["Sir Philip Christison", "Brigjend T.E.D Kelly", "Vanheutz", "Kapten Westerling"],
+        answer: "Kapten Westerling"
+      },
+      {
+        question: "Perang Puputan di Bali dipimpin oleh...",
+        options: ["Wolter Mongonsidi", "I Gusti Ngurah Rai", "Mohammad Toha", "Jenderal Sudirman"],
+        answer: "I Gusti Ngurah Rai"
+      },
+      {
+        question: "Penolakan pembentukan negara Indonesia Timur adalah sebab terjadinya perang...",
+        options: ["Medan Area", "Sulawesi", "Puputan", "Kalimantan"],
+        answer: "Puputan"
+      },
+      {
+        question: "Perang Puputan artinya perang...",
+        options: ["Habis-habisan", "Gerilya", "Revolusi", "Kemerdekaan"],
+        answer: "Habis-habisan"
+      },
+      {
+        question: "Pasukan Sekutu (AFNEI) yang tiba di Semarang tanggal 20 Oktober 1945 dipimpin oleh...",
+        options: ["Brigjend Ted Kelly", "Jendral Montgomery", "Sir Philip Christison", "Brigjend Bethell"],
+        answer: "Brigjend Bethell"
+      },
+      {
+        question: "Pimpinan pasukan TKR (Tentara Keamanan Rakyat) yang gugur dalam pertempuran Ambarawa adalah...",
+        options: ["Sudirman", "A.H. Nasution", "Pierre Tandean", "Isdiman"],
+        answer: "Isdiman"
+      },
+      {
+        question: "Sebab terjadinya pertempuran lima hari di Semarang adalah isu diracuninya sumber air minum di...",
+        options: ["Candi Lama", "Ambarawa", "Jati Luhur", "Pamulang"],
+        answer: "Candi Lama"
+      },
+      {
+        question: "Pertempuran lima hari di Semarang adalah pertempuran TKR melawan...",
+        options: ["Sekutu", "Belanda", "AFNEI", "Jepang"],
+        answer: "Jepang"
+      },
+      {
+        question: "Dokter yang tewas ditembak oleh Jepang sewaktu memeriksa sumber air minum di Semarang adalah...",
+        options: ["Dr. Karyadi", "Dr. Slamet Riyadi", "Dr. Pringadi", "Dr. Suwondo"],
+        answer: "Dr. Karyadi"
+      },
+      {
+        question: "Serangan Umum 1 Maret 1949 merupakan usulan dari...",
+        options: ["Jend Sudirman", "Jend Ahmad Yani", "Kol. Soeharto", "Sri Sultan Hamengkubuwono IX"],
+        answer: "Sri Sultan Hamengkubuwono IX"
+      },
+      {
+        question: "Presiden Soekarno memberi mandat untuk membentuk Pemerintahan Darurat Republik Indonesia (PDRI) kepada...",
+        options: ["Soeharto", "Sri Sultan Hamengkubuwono IX", "Syafruddin Prawiranegara", "Mohammad Hatta"],
+        answer: "Syafruddin Prawiranegara"
+      },
+      {
+        question: "Dalam Agresi Militer Belanda II, Belanda berhasil menguasai ibu kota Republik Indonesia yaitu...",
+        options: ["Jakarta", "Jayakarta", "Jogjakarta", "Bukittinggi"],
+        answer: "Jogjakarta"
+      },
+      {
+        question: "Pemerintahan Darurat Republik Indonesia (PDRI) berpusat di...",
+        options: ["Jakarta", "Surakarta", "Jogjakarta", "Bukittinggi"],
+        answer: "Bukittinggi"
+      },
+      {
+        question: "Setelah Belanda membebaskan Presiden Soekarno dan Wakil Presiden Moh. Hatta disepakati Indonesia-Belanda melaksanakan perundingan...",
+        options: ["Roem-Roijen", "Linggarjati", "Renville", "Giyanti"],
+        answer: "Roem-Roijen"
+      },
+      {
+        question: "Perjuangan mempertahankan kemerdekaan melalui perundingan adalah perjuangan...",
+        options: ["Diplomasi", "Bersenjata", "Gerilya", "Puputan"],
+        answer: "Diplomasi"
+      },
+      {
+        question: "Berikut adalah perundingan yang dijalankan Indonesia dalam perjuangan diplomasi mempertahankan kemerdekaan, kecuali...",
+        options: ["Perundingan Linggarjati", "Perundingan Hoge Veluwe", "Perundingan Renville", "Perundingan Salatiga"],
+        answer: "Perundingan Salatiga"
+      },
+      {
+        question: "Dalam perundingan Linggarjati, Belanda mengakui Republik Indonesia secara de facto meliputi wilayah...",
+        options: ["Kalimantan, Jawa, Madura", "Sulawesi, Jawa, Madura", "Sumatra, Kalimantan, Madura", "Sumatra, Jawa, Madura"],
+        answer: "Sumatra, Jawa, Madura"
+      },
+      {
+        question: "Anggota Komisi Tiga Negara (KTN) asal Australia pilihan Indonesia dipimpin oleh...",
+        options: ["Frank Graham", "Paul Van Zeeland", "Richard Kirby", "Van Royjen"],
+        answer: "Richard Kirby"
+      },
+      {
+        question: "Kesepakatan Indonesia-Belanda untuk menyelenggarakan Konferensi Meja Bundar (KMB) adalah hasil keputusan perundingan...",
+        options: ["Renville", "Hoge Veluwe", "Linggarjati", "Roem-Roijen"],
+        answer: "Roem-Roijen"
+      },
+      {
+        question: "Delegasi Indonesia dalam Konferensi Meja Bundar di Den Haag Belanda dipimpin oleh...",
+        options: ["Amir Sjarifuddin", "Moh. Hatta", "Sutan Sjahrir", "Ir. Soekarno"],
+        answer: "Moh. Hatta"
+      },
+      {
+        question: "Bentuk negara Indonesia yang diakui oleh Belanda dalam Konferensi Meja Bundar adalah...",
+        options: ["Negara Kesatuan", "Negara Kesultanan", "Negara Serikat", "Komunis"],
+        answer: "Negara Serikat"
+      },
+      {
+        question: "Konferensi Inter-Indonesia adalah konferensi antara Republik Indonesia dengan...",
+        options: ["BFO", "Dewan Keamanan PBB", "Belanda", "UNCI"],
+        answer: "BFO"
+      },
+      {
+        question: "Negara-negara boneka bentukan Belanda tergabung dalam organisasi...",
+        options: ["NKRI", "RIS", "BFO", "NIS"],
+        answer: "BFO"
+      }
+    ];
+
+    // Status State Kuis
+    let playerName = "";
+    let questionDuration = 15;
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let timerInterval = null;
+    let timeLeft = 0;
+    let isAnswered = false;
+    let autoAdvanceTimer = null;
+
+    // Array rekap hasil pemain
+    let userAnswers = [];
+
+    // Utility: Shuffle Array (Fisher-Yates)
+    function shuffle(array) {
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // Navigasi Tampilan
+    function showScreen(screenId) {
+      document.getElementById('screen-start').classList.add('hidden');
+      document.getElementById('screen-quiz').classList.add('hidden');
+      document.getElementById('screen-result').classList.add('hidden');
+
+      const target = document.getElementById(screenId);
+      target.classList.remove('hidden');
+      if (screenId === 'screen-quiz') {
+        target.classList.add('flex');
+      }
+    }
+
+    // Memulai Kuis Baru
+    function startQuiz() {
+      const nameInput = document.getElementById('player-name');
+      const nameVal = nameInput.value.trim();
+      const nameError = document.getElementById('name-error');
+
+      if (!nameVal) {
+        nameError.classList.remove('hidden');
+        nameInput.focus();
+        return;
+      }
+      nameError.classList.add('hidden');
+      playerName = nameVal;
+
+      // Ambil opsi durasi
+      const selectedDuration = document.querySelector('input[name="time-option"]:checked').value;
+      questionDuration = parseInt(selectedDuration, 10);
+
+      // Acak soal dan acak pilihan jawaban untuk setiap soal
+      quizData = shuffle(masterQuestions).map(q => ({
+        question: q.question,
+        options: shuffle(q.options),
+        correctAnswer: q.answer
+      }));
+
+      currentQuestionIndex = 0;
+      userAnswers = [];
+
+      showScreen('screen-quiz');
+      loadQuestion();
+    }
+
+    // Memuat Soal Aktif
+    function loadQuestion() {
+      clearInterval(timerInterval);
+      clearTimeout(autoAdvanceTimer);
+      isAnswered = false;
+
+      const qData = quizData[currentQuestionIndex];
+      const total = quizData.length;
+
+      // Update Teks Header & Tombol
+      document.getElementById('quiz-question-counter').innerText = `Soal ${currentQuestionIndex + 1} dari ${total}`;
+      document.getElementById('quiz-question-text').innerText = qData.question;
+      document.getElementById('feedback-message').innerHTML = "";
+      document.getElementById('btn-next').classList.add('hidden');
+
+      // Render Pilihan Jawaban
+      const container = document.getElementById('quiz-options-container');
+      container.innerHTML = "";
+
+      const optionLabels = ['A', 'B', 'C', 'D'];
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-900/70 hover:bg-slate-700/50 text-white font-medium flex items-center transition-all duration-150 group";
+        btn.onclick = () => handleSelectAnswer(opt, btn);
+        
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 font-bold flex items-center justify-center mr-3 text-sm border border-slate-700 group-hover:border-slate-500 transition-colors">
+            ${optionLabels[idx]}
+          </span>
+          <span class="flex-1 text-sm sm:text-base text-slate-100">${opt}</span>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Mulai Timer
+      timeLeft = questionDuration;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+    }
+
+    // Update Tampilan Timer dan Bar Progress
+    function updateTimerDisplay() {
+      const text = document.getElementById('quiz-timer-text');
+      const bar = document.getElementById('quiz-timer-bar');
+
+      text.innerText = `${timeLeft}s`;
+      const percentage = Math.max(0, (timeLeft / questionDuration) * 100);
+      bar.style.width = `${percentage}%`;
+
+      // Ubah warna jika waktu menipis
+      if (timeLeft <= 5) {
+        bar.className = "h-full bg-rose-500 transition-[width] duration-100 ease-linear";
+        text.className = "font-mono text-rose-400 font-bold text-base";
+      } else {
+        bar.className = "h-full bg-emerald-500 transition-[width] duration-100 ease-linear";
+        text.className = "font-mono text-white text-base";
+      }
+    }
+
+    // Handler Saat Pengguna Memilih Jawaban
+    function handleSelectAnswer(selectedOption, selectedBtn) {
+      if (isAnswered) return;
+      isAnswered = true;
+      clearInterval(timerInterval);
+
+      const qData = quizData[currentQuestionIndex];
+      const isCorrect = (selectedOption === qData.correctAnswer);
+
+      // Simpan jawaban
+      userAnswers.push({
+        question: qData.question,
+        userAnswer: selectedOption,
+        correctAnswer: qData.correctAnswer,
+        status: isCorrect ? 'correct' : 'wrong'
+      });
+
+      // Visualisasi Jawaban
+      const buttons = document.getElementById('quiz-options-container').querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-slate-700/50', 'bg-slate-900/70');
+        
+        const optionText = btn.querySelector('span.flex-1').innerText.trim();
+        
+        if (optionText === qData.correctAnswer) {
+          // Warna Hijau Cerah dengan teks gelap agar kontras tinggi & terbaca
+          btn.classList.add('bg-emerald-500', 'border-emerald-400', 'text-slate-950', 'font-bold');
+          btn.querySelector('span.flex-1').classList.remove('text-slate-100');
+          btn.querySelector('span.flex-1').classList.add('text-slate-950', 'font-bold');
+          btn.querySelector('span:first-child').classList.add('bg-emerald-600', 'text-white', 'border-emerald-700');
+        } else if (btn === selectedBtn && !isCorrect) {
+          // Warna Merah Terang dengan teks putih tebal
+          btn.classList.add('bg-rose-600', 'border-rose-500', 'text-white', 'font-bold');
+          btn.querySelector('span:first-child').classList.add('bg-rose-700', 'text-white', 'border-rose-800');
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      });
+
+      const feedback = document.getElementById('feedback-message');
+      if (isCorrect) {
+        feedback.innerHTML = `<span class="text-emerald-400 font-bold flex items-center gap-1.5">✓ Jawaban Anda Benar!</span>`;
+      } else {
+        feedback.innerHTML = `<span class="text-rose-400 font-bold flex items-center gap-1.5">✕ Jawaban Anda Kurang Tepat</span>`;
+      }
+
+      showNextControl();
+    }
+
+    // Handler Saat Waktu Habis
+    function handleTimeOut() {
+      if (isAnswered) return;
+      isAnswered = true;
+
+      const qData = quizData[currentQuestionIndex];
+
+      // Simpan status waktu habis
+      userAnswers.push({
+        question: qData.question,
+        userAnswer: "Waktu Habis",
+        correctAnswer: qData.correctAnswer,
+        status: 'timeout'
+      });
+
+      // Tampilkan jawaban yang benar (Hijau)
+      const buttons = document.getElementById('quiz-options-container').querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-slate-700/50', 'bg-slate-900/70');
+
+        const optionText = btn.querySelector('span.flex-1').innerText.trim();
+        if (optionText === qData.correctAnswer) {
+          btn.classList.add('bg-emerald-500', 'border-emerald-400', 'text-slate-950', 'font-bold');
+          btn.querySelector('span.flex-1').classList.remove('text-slate-100');
+          btn.querySelector('span.flex-1').classList.add('text-slate-950', 'font-bold');
+          btn.querySelector('span:first-child').classList.add('bg-emerald-600', 'text-white', 'border-emerald-700');
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      });
+
+      const feedback = document.getElementById('feedback-message');
+      feedback.innerHTML = `<span class="text-amber-400 font-bold flex items-center gap-1.5">⏱ Waktu Habis! Jawaban benar ditampilkan di atas.</span>`;
+
+      showNextControl();
+    }
+
+    // Tampilkan tombol lanjut & auto lanjut
+    function showNextControl() {
+      const btnNext = document.getElementById('btn-next');
+      btnNext.classList.remove('hidden');
+
+      // Otomatis lanjut setelah 2.2 detik jika belum diklik
+      autoAdvanceTimer = setTimeout(() => {
+        nextQuestion();
+      }, 2200);
+    }
+
+    // Menuju Pertanyaan Berikutnya atau Layar Hasil
+    function nextQuestion() {
+      clearTimeout(autoAdvanceTimer);
+      if (currentQuestionIndex < quizData.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    // Menampilkan Layar Skor & Review
+    function finishQuiz() {
+      clearInterval(timerInterval);
+      clearTimeout(autoAdvanceTimer);
+
+      const totalQuestions = quizData.length;
+      let correctCount = 0;
+      let wrongCount = 0;
+      let timeoutCount = 0;
+
+      userAnswers.forEach(ans => {
+        if (ans.status === 'correct') correctCount++;
+        else if (ans.status === 'wrong') wrongCount++;
+        else if (ans.status === 'timeout') timeoutCount++;
+      });
+
+      // Perhitungan skor = (jumlah benar / total soal) * 100
+      const finalScore = Math.round((correctCount / totalQuestions) * 100);
+
+      document.getElementById('result-player-name').innerText = playerName;
+      document.getElementById('result-score').innerText = finalScore;
+      document.getElementById('result-correct').innerText = correctCount;
+      document.getElementById('result-wrong').innerText = wrongCount;
+      document.getElementById('result-timeout').innerText = timeoutCount;
+
+      // Render Review Detail
+      const reviewContainer = document.getElementById('review-list');
+      reviewContainer.innerHTML = "";
+
+      userAnswers.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = "p-4 bg-slate-900/70 border border-slate-700/80 rounded-xl space-y-2";
+
+        let statusBadge = "";
+        if (item.status === 'correct') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Benar</span>`;
+        } else if (item.status === 'wrong') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">Salah</span>`;
+        } else {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">Waktu Habis</span>`;
+        }
+
+        itemDiv.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-sm font-semibold text-slate-200">
+              ${index + 1}. ${item.question}
+            </span>
+            ${statusBadge}
+          </div>
+          <div class="text-xs sm:text-sm space-y-1 pt-1 border-t border-slate-800">
+            <div class="flex items-start gap-2">
+              <span class="text-slate-400 w-28 shrink-0">Jawaban Anda:</span>
+              <span class="${item.status === 'correct' ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}">
+                ${item.userAnswer}
+              </span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-slate-400 w-28 shrink-0">Jawaban Benar:</span>
+              <span class="text-emerald-400 font-bold">
+                ${item.correctAnswer}
+              </span>
+            </div>
+          </div>
+        `;
+        reviewContainer.appendChild(itemDiv);
+      });
+
+      showScreen('screen-result');
+    }
+
+    // Reset Kuis untuk Mulai Baru
+    function resetQuiz() {
+      clearInterval(timerInterval);
+      clearTimeout(autoAdvanceTimer);
+      document.getElementById('player-name').value = "";
+      showScreen('screen-start');
+    }
+  </script>
+</body>
+</html>
